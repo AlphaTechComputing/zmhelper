@@ -1,12 +1,4 @@
 #!/bin/bash
-if [ $USER -ne root ]
-	then
-	echo "sudo script or run as root."
-	exit 1
-fi
-
-#fix zoneminder regression
-sed -i 's/\/cgi-bin\/nph-zms/\/zm\/cgi-bin\/nph-zms/ /usr/share/zoneminder/db/zm_create.sql
 
 #remove current mysql sybolic links
 rm /etc/mysql/my.cnf
@@ -18,6 +10,9 @@ add-apt-repository ppa:iconnor/zoneminder
 apt-get update
 apt-get upgrade -y
 apt-get install mysqltuner zoneminder php-gd -y
+
+#fix zoneminder regression
+sed -i 's/\/cgi-bin\/nph-zms/\/zm\/cgi-bin\/nph-zms/' /usr/share/zoneminder/db/zm_create.sql
 
 mysql -uroot -p < /usr/share/zoneminder/db/zm_create.sql
 mysql -uroot -p -e "grant all on zm.* to 'zmuser'@localhost identified by 'zmpass';"
@@ -55,3 +50,4 @@ Alias /zm /usr/share/zoneminder/www
 </Directory>" >> /etc/apache2/conf-available/zoneminder.conf
 
 sed -i 's/;date.timezone =/date.timezone = America\/New_York/' /etc/php/7.0/apache2/php.ini
+
