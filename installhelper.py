@@ -11,3 +11,5 @@ os.system('sudo chmod +x /usr/bin/checkzm.py')
 job = cron.new(command='/usr/bin/checkzm.py')
 job.minute.every(1)
 cron.write()
+
+os.system('sudo crontab -l')
